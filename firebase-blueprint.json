@@ -1,0 +1,63 @@
+{
+  "entities": {
+    "Memory": {
+      "title": "Memory",
+      "description": "A past interaction fact, user preference, or system memory logged by JEETVIS.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "category": { "type": "string", "enum": ["user_preference", "interaction_fact", "code_snippet", "custom_note"] },
+        "content": { "type": "string" },
+        "importance": { "type": "string", "enum": ["high", "medium", "low"] },
+        "timestamp": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["id", "category", "content", "importance", "timestamp", "userId"]
+    },
+    "WorkspaceConfig": {
+      "title": "WorkspaceConfig",
+      "description": "User's synchronized workspace configuration state.",
+      "type": "object",
+      "properties": {
+        "pomodoro": {
+          "type": "object"
+        },
+        "tasks": {
+          "type": "array"
+        },
+        "preferences": {
+          "type": "object"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "required": ["pomodoro", "tasks", "preferences", "updatedAt"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "A single message in the chat history.",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "enum": ["user", "model", "system"] },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["role", "content", "timestamp"]
+    }
+  },
+  "firestore": {
+    "users/{userId}/memories/{memoryId}": {
+      "schema": "Memory",
+      "description": "User's personal virtual assistant memories."
+    },
+    "users/{userId}/config/{configId}": {
+      "schema": "WorkspaceConfig",
+      "description": "User's workspace configuration state containing tasks, preferences, and Pomodoro status."
+    },
+    "users/{userId}/chat_history/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Persistent record of conversations with JEETVIS."
+    }
+  }
+}

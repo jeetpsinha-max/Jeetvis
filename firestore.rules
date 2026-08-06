@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Helper for validation of Memory
+    function isValidMemory(data) {
+      return data.keys().hasAll(['id', 'category', 'content', 'importance', 'timestamp', 'userId'])
+        && data.keys().size() == 6
+        && data.id is string && data.id.size() <= 128
+        && data.category is string && (data.category == 'user_preference' || data.category == 'interaction_fact' || data.category == 'code_snippet' || data.category == 'custom_note')
+        && data.content is string && data.content.size() <= 10000
+        && data.importance is string && (data.importance == 'high' || data.importance == 'medium' || data.importance == 'low')
+        && data.timestamp is string && data.timestamp.size() <= 128
+        && data.userId is string && data.userId == request.auth.uid;
+    }
+
+    match /users/{userId}/memories/{memoryId} {
+      allow read: if isOwner(userId);
+      
+      allow create: if isOwner(userId) 
+        && isValidId(memoryId)
+        && isValidMemory(incoming());
+        
+      allow update: if isOwner(userId) 
+        && isValidId(memoryId)
+        && isValidMemory(incoming())
+        && incoming().userId == existing().userId
+        && incoming().id == existing().id;
+        
+      allow delete: if isOwner(userId);
+    }
+
+    match /users/{userId}/config/{configId} {
+      allow read, write: if isOwner(userId) && isValidId(configId);
+    }
+
+    match /users/{userId}/chat_history/{messageId} {
+      allow read, write: if isOwner(userId) && isValidId(messageId);
+    }
+  }
+}

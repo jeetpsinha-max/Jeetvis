@@ -1,0 +1,6 @@
+{
+  "name": "JEETVIS Command Center",
+  "description": "An ultra-advanced, sleek personal command center inspired by JARVIS, featuring a cyber-glowing Pomodoro, microphone-responsive interactive holographic orb, AI-powered spam analyzer and automated task breakdown engine.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

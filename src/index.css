@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@200;300;400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Courier New", Courier, monospace;
+}
+
+:root {
+  --bg: #030712;
+  --panel: #0f172a;
+  --accent: #22d3ee;
+  --accent-glow: rgba(34, 211, 238, 0.3);
+  --text-dim: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+}
+
+/* Custom Editorial / Cinematic Glass Utilities */
+.glass {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+}
+
+.monochrome-text {
+  font-family: var(--font-mono);
+}
+
+.orb-ring {
+  border: 2px dashed var(--accent);
+  border-radius: 50%;
+  opacity: 0.35;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: var(--accent);
+  margin-left: 4px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@keyframes orb-ambient-breathe {
+  0%, 100% {
+    transform: scale(0.97);
+    filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.25));
+  }
+  50% {
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 25px rgba(34, 211, 238, 0.45));
+  }
+}
+
